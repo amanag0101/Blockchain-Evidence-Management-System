@@ -57,15 +57,13 @@ contract EvidenceManagementSystem {
         newCase.caseName = _caseName;
         newCase.caseType = _caseType;
         newCase.caseDescription = _caseDescription;
-
-        cases[msg.sender].push(newCase);
     }
 
     // add evidence to a case
     // function uploadEvidence(
     //     uint256 caseId,
     //     string memory _evidenceType,
-    //     string memory _department,
+    //     string memory _departm   ent,
     //     address _uploader,
     //     string memory _evidenceDescription
     // ) public {

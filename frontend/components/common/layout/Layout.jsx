@@ -1,4 +1,3 @@
-import Footer from "../footer/Footer";
 import Header from "../header/Header";
 import styles from "./layout.module.css";
 
@@ -12,10 +11,6 @@ export default function Layout({ children }) {
       <div className={styles["children"]}>
         {children}
       </div>
-
-      {/* <div className={styles["footer"]}>
-        {<Footer/>}
-      </div> */}
     </div>
   );
 }

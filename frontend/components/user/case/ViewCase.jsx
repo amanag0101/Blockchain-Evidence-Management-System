@@ -24,59 +24,56 @@ export default function ViewCase() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <main>
-        <Container sx={{ py: 8 }} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    image="https://source.unsplash.com/random"
-                    alt="random"
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Evidence ID
-                    </Typography>
-                    <Typography>
-                      <b>Upload Date:</b> 22/04/23
-                    </Typography>
-                    <Typography>
-                      <b>Upload Time:</b> 1:00 PM
-                    </Typography>
-                    <Typography
-                      sx={{
-                        marginTop: 1,
-                      }}
-                    >
-                      A brief description about the Evidence
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">View</Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
+      <Container sx={{ py: 8 }} maxWidth="md">
+        <Grid container spacing={4}>
+          {cards.map((card) => (
+            <Grid item key={card} xs={12} sm={6} md={4}>
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  image="https://source.unsplash.com/random"
+                  alt="random"
+                />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    Evidence ID
+                  </Typography>
+                  <Typography>
+                    <b>Upload Date:</b> 22/04/23
+                  </Typography>
+                  <Typography>
+                    <b>Upload Time:</b> 1:00 PM
+                  </Typography>
+                  <Typography
+                    sx={{
+                      marginTop: 1,
+                    }}
+                  >
+                    A brief description about the Evidence
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">View</Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
 
       <div
         style={{
           position: "sticky",
           bottom: "5vh",
           right: "0",
-          "margin-left": "82%",
-          "margin-bottom": "20px",
+          marginLeft: "82%",
+          marginBottom: "20px",
         }}
       >
         <Fab variant="extended" onClick={() => setOpenAddEvidenceDialog(true)}>

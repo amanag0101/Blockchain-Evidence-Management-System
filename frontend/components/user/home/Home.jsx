@@ -1,4 +1,3 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -10,55 +9,77 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "@/pages/_app";
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const theme = createTheme();
 
 export default function UserHome() {
   const router = useRouter();
+  const { account, contract } = useContext(AppContext);
+  const [data, setData] = useState([
+    {
+      0: "",
+      1: "",
+      2: "",
+      3: "",
+      4: "",
+      5: [],
+    },
+  ]);
+
+  useEffect(() => {
+    getCases();
+  }, []);
+
+  const getCases = async () => {
+    // console.log(await contract?.methods.getCases(account).call());
+    let temp = await contract?.methods.getCases(account).call();
+    setData(temp);
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <main>
-        <Container sx={{ py: 8 }} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    image="https://source.unsplash.com/random"
-                    alt="random"
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Case ID
-                    </Typography>
-                    <Typography gutterBottom variant="h7" component="h4">
-                      Case Name
-                    </Typography>
-                    <Typography>
-                      A brief description about the case
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" onClick={() => router.push("/user/view-case")}>View Evidence</Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
+      <Container sx={{ py: 8 }} maxWidth="md">
+        <Grid container spacing={4}>
+          {data?.map((item) => (
+            <Grid item key={item[0]} xs={12} sm={6} md={4}>
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  image="https://source.unsplash.com/random"
+                  alt="random"
+                />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {item[2]}
+                  </Typography>
+                  <Typography gutterBottom variant="h7" component="h4">
+                    {item[3]}
+                  </Typography>
+                  <Typography>{item[4]}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    onClick={() => router.push("/user/view-case")}
+                  >
+                    View Evidence
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
     </ThemeProvider>
   );
 }
