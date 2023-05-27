@@ -11,12 +11,18 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/pages/_app";
+import Fab from "@mui/material/Fab";
+import NavigationIcon from "@mui/icons-material/Navigation";
+import AddCaseDialog from "../case/AddCase";
 
 const theme = createTheme();
 
 export default function UserHome() {
   const router = useRouter();
   const { account, contract } = useContext(AppContext);
+  const [openAddCaseDialog, setOpenAddCaseDialog] = useState(false);
+  const [getAllCases, setGetAllCases] = useState(false);
+
   const [data, setData] = useState([
     {
       0: "",
@@ -32,8 +38,15 @@ export default function UserHome() {
     getCases();
   }, []);
 
+  useEffect(() => {
+    if (getAllCases) {
+      getCases();
+      setGetAllCases(false);
+    }
+  }, [getAllCases]);
+
   const getCases = async () => {
-    // console.log(await contract?.methods.getCases(account).call());
+    console.log(await contract?.methods.getCases(account).call());
     let temp = await contract?.methods.getCases(account).call();
     setData(temp);
   };
@@ -79,6 +92,30 @@ export default function UserHome() {
             </Grid>
           ))}
         </Grid>
+
+        <Fab
+          sx={{
+            position: "sticky",
+            bottom: "5vh",
+            right: "0",
+            marginLeft: "82%",
+          }}
+          variant="extended"
+          onClick={() => setOpenAddCaseDialog(true)}
+        >
+          <NavigationIcon sx={{ mr: 1 }} />
+          Add new Case
+        </Fab>
+
+        {openAddCaseDialog ? (
+          <AddCaseDialog
+            openAddCaseDialog={openAddCaseDialog}
+            setOpenAddCaseDialog={setOpenAddCaseDialog}
+            setGetAllCases={setGetAllCases}
+          />
+        ) : (
+          <></>
+        )}
       </Container>
     </ThemeProvider>
   );

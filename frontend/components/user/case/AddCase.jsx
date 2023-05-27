@@ -15,6 +15,7 @@ import { useContext, useState } from "react";
 export default function AddCaseDialog({
   openAddCaseDialog,
   setOpenAddCaseDialog,
+  setGetAllCases
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -29,6 +30,7 @@ export default function AddCaseDialog({
 
   const handleSubmit = () => {
     addCase();
+    setGetAllCases(true);
     handleClose();
   };
 
