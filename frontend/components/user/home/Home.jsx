@@ -46,9 +46,10 @@ export default function UserHome() {
   }, [getAllCases]);
 
   const getCases = async () => {
-    console.log(await contract?.methods.getCases(account).call());
-    let temp = await contract?.methods.getCases(account).call();
-    setData(temp);
+    await contract?.methods
+      .getCases(account)
+      .call()
+      .then((cases) => setData(cases));
   };
 
   return (
@@ -83,7 +84,7 @@ export default function UserHome() {
                 <CardActions>
                   <Button
                     size="small"
-                    onClick={() => router.push("/user/view-case")}
+                    onClick={() => router.push(`/user/view-case/${item[0]}`)}
                   >
                     View Evidence
                   </Button>

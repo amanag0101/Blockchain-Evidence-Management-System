@@ -1,4 +1,3 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -12,13 +11,63 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Fab from "@mui/material/Fab";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import AddEvidenceDialog from "./AddEvidence";
-import { useState } from "react";
+import { AppContext } from "@/pages/_app";
+import { useContext, useState, useEffect } from "react";
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const theme = createTheme();
 
-export default function ViewCase() {
+export default function ViewCase({ caseId }) {
   const [openAddEvidenceDialog, setOpenAddEvidenceDialog] = useState(false);
+  const [getAllEvidence, setGetAllEvidence] = useState(false);
+  const { contract, account } = useContext(AppContext);
+  const [data, setData] = useState([
+    {
+      0: "",
+      1: "",
+      2: "",
+      3: "",
+    },
+  ]);
+
+  useEffect(() => {
+    getEvidence();
+  }, []);
+
+  useEffect(() => {
+    if (getAllEvidence) {
+      getEvidence();
+      setGetAllEvidence(false);
+    }
+  }, [getAllEvidence]);
+
+  const getEvidence = async () => {
+    await contract?.methods
+      .getEvidenceForCase(caseId)
+      .call({ from: account })
+      .then((evidences) => setData(evidences));
+  };
+
+  const getDate = (timestamp) => {
+    const timestampInSeconds = timestamp;
+    const timestampInMilliseconds = timestampInSeconds * 1000;
+    const date = new Date(timestampInMilliseconds);
+
+    const options = { timeZone: "Asia/Kolkata" };
+    const dateString = date.toLocaleDateString("en-IN", options);
+
+    return dateString;
+  };
+
+  const getTime = (timestamp) => {
+    const timestampInSeconds = timestamp;
+    const timestampInMilliseconds = timestampInSeconds * 1000;
+    const date = new Date(timestampInMilliseconds);
+
+    const options = { timeZone: "Asia/Kolkata" };
+    const timeString = date.toLocaleTimeString("en-IN", options);
+
+    return timeString;
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -26,8 +75,8 @@ export default function ViewCase() {
 
       <Container sx={{ py: 8 }} maxWidth="md">
         <Grid container spacing={4}>
-          {cards.map((card) => (
-            <Grid item key={card} xs={12} sm={6} md={4}>
+          {data?.map((item) => (
+            <Grid item key={item[0]} xs={12} sm={6} md={4}>
               <Card
                 sx={{
                   height: "100%",
@@ -42,20 +91,23 @@ export default function ViewCase() {
                 />
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography gutterBottom variant="h5" component="h2">
-                    Evidence ID
+                    ID: {item[0]}
                   </Typography>
                   <Typography>
-                    <b>Upload Date:</b> 22/04/23
+                    <b>Upload Date:</b> {getDate(item[1])}
                   </Typography>
                   <Typography>
-                    <b>Upload Time:</b> 1:00 PM
+                    <b>Upload Time:</b> {getTime(item[1])}
+                  </Typography>
+                  <Typography>
+                    <b>Type:</b> {item[2]}
                   </Typography>
                   <Typography
                     sx={{
                       marginTop: 1,
                     }}
                   >
-                    A brief description about the Evidence
+                    {item[3]}
                   </Typography>
                 </CardContent>
                 <CardActions>
@@ -86,6 +138,8 @@ export default function ViewCase() {
         <AddEvidenceDialog
           openAddEvidenceDialog={openAddEvidenceDialog}
           setOpenAddEvidenceDialog={setOpenAddEvidenceDialog}
+          setGetAllEvidence={setGetAllEvidence}
+          caseId={caseId}
         />
       ) : (
         <></>

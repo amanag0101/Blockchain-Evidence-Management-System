@@ -10,25 +10,35 @@ import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import { useContext, useState } from "react";
+import { AppContext } from "@/pages/_app";
 
 export default function AddEvidenceDialog({
   openAddEvidenceDialog,
   setOpenAddEvidenceDialog,
+  setGetAllEvidence,
+  caseId,
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const { account, contract } = useContext(AppContext);
+  const [evidenceType, setEvidenceType] = useState("");
+  const [evidenceDescription, setEvidenceDescription] = useState("");
 
   const handleClose = () => {
     setOpenAddEvidenceDialog(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const handleSubmit = () => {
+    addEvidence();
+    setGetAllEvidence(true);
+    handleClose();
+  };
+
+  const addEvidence = async () => {
+    await contract.methods
+      .addEvidenceToCase(caseId, evidenceType, evidenceDescription)
+      .send({ from: account, gas: 3000000 });
   };
 
   return (
@@ -43,61 +53,26 @@ export default function AddEvidenceDialog({
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
+          <Box sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Evidence ID"
-                  name="email"
-                  autoComplete=""
+                  id="evidenceType"
+                  label="Evidence Type"
+                  name="evidenceType"
+                  onChange={e => setEvidenceType(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Date"
-                  name="email"
-                  autoComplete=""
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Time"
-                  name="email"
-                  autoComplete=""
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Case Name"
-                  name="email"
-                  autoComplete=""
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Case Description"
-                  name="email"
-                  autoComplete=""
+                  id="evidenceDescription"
+                  label="Evidence Description"
+                  name="evidenceDescription"
+                  onChange={e => setEvidenceDescription(e.target.value)}
                 />
               </Grid>
             </Grid>
@@ -108,7 +83,7 @@ export default function AddEvidenceDialog({
         <Button autoFocus onClick={handleClose}>
           Cancel
         </Button>
-        <Button onClick={handleClose} autoFocus>
+        <Button onClick={handleSubmit} autoFocus>
           Add
         </Button>
       </DialogActions>

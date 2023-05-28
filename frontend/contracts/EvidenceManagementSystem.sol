@@ -4,11 +4,8 @@ pragma solidity >=0.8.2 <0.9.0;
 contract EvidenceManagementSystem {
     struct Evidence {
         uint256 evidenceId;
-        uint256 caseId;
-        uint256 uploadTimestamp;
+        uint256 timestamp;
         string evidenceType;
-        string department;
-        address uploader;
         string evidenceDescription;
     }
 
@@ -22,14 +19,10 @@ contract EvidenceManagementSystem {
     }
 
     address public admin;
-    uint256 private caseIdCounter;
-    uint256 private evidenceIdCounter;
     mapping(address => Case[]) cases; // store a list of cases
 
     constructor() {
         admin = msg.sender;
-        caseIdCounter = 0;
-        evidenceIdCounter = 0;
     }
 
     modifier restricted() {
@@ -48,30 +41,49 @@ contract EvidenceManagementSystem {
         string memory _caseType,
         string memory _caseDescription
     ) public notAdmin {
-        // require(msg.sender != admin);
-
         // Create a new storage pointer to the next slot in the requests array
         Case storage newCase = cases[msg.sender].push();
         newCase.creationTimestamp = block.timestamp;
-        newCase.caseId = ++caseIdCounter;
+        newCase.caseId = cases[msg.sender].length;
         newCase.caseName = _caseName;
         newCase.caseType = _caseType;
         newCase.caseDescription = _caseDescription;
     }
 
     // add evidence to a case
-    // function uploadEvidence(
-    //     uint256 caseId,
-    //     string memory _evidenceType,
-    //     string memory _departm   ent,
-    //     address _uploader,
-    //     string memory _evidenceDescription
-    // ) public {
-
-    // }
+    function addEvidenceToCase(
+        uint256 _caseId,
+        string memory _evidenceType,
+        string memory _evidenceDescription
+    ) public {
+        for (uint256 i = 0; i < cases[msg.sender].length; i++) {
+            if (cases[msg.sender][i].caseId == _caseId) {
+                Evidence storage newEvidence = cases[msg.sender][i]
+                    .evidences
+                    .push();
+                newEvidence.evidenceId = cases[msg.sender][i].evidences.length;
+                newEvidence.timestamp = block.timestamp;
+                newEvidence.evidenceType = _evidenceType;
+                newEvidence.evidenceDescription = _evidenceDescription;
+                break;
+            }
+        }
+    }
 
     // get case details
     function getCases(address _address) public view returns (Case[] memory) {
         return cases[_address];
+    }
+
+    // get evidences for a particular case
+    function getEvidenceForCase(
+        uint256 _caseId
+    ) public view returns (Evidence[] memory) {
+        for (uint256 i = 0; i < cases[msg.sender].length; i++) {
+            if (cases[msg.sender][i].caseId == _caseId) {
+                return cases[msg.sender][i].evidences;
+            }
+        }
+        return new Evidence[](0);
     }
 }
