@@ -13,6 +13,7 @@ import NavigationIcon from "@mui/icons-material/Navigation";
 import AddEvidenceDialog from "./AddEvidence";
 import { AppContext } from "@/pages/_app";
 import { useContext, useState, useEffect } from "react";
+import ShowEvidence from "./ShowEvidence";
 
 const theme = createTheme();
 
@@ -20,6 +21,8 @@ export default function ViewCase({ caseId }) {
   const [openAddEvidenceDialog, setOpenAddEvidenceDialog] = useState(false);
   const [getAllEvidence, setGetAllEvidence] = useState(false);
   const { contract, account } = useContext(AppContext);
+  const [showEvidence, setShowEvidence] = useState(false);
+  const [selectedImgHash, setSelectedImgHash] = useState("");
   const [data, setData] = useState([
     {
       0: "",
@@ -112,7 +115,10 @@ export default function ViewCase({ caseId }) {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small">View</Button>
+                  <Button onClick={() => {
+                    setSelectedImgHash(`https://gateway.pinata.cloud/ipfs/${item[4]}`)
+                    setShowEvidence(true)
+                  }} size="small">View</Button>
                 </CardActions>
               </Card>
             </Grid>
@@ -145,6 +151,12 @@ export default function ViewCase({ caseId }) {
       ) : (
         <></>
       )}
+
+      <ShowEvidence 
+        showEvidence = {showEvidence}
+        setShowEvidence = {setShowEvidence}
+        imgHash = {selectedImgHash}
+      />
     </ThemeProvider>
   );
 }

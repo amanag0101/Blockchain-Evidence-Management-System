@@ -35,6 +35,7 @@ export default function UserHome() {
   ]);
 
   useEffect(() => {
+    // console.log();
     getCases();
   }, []);
 
