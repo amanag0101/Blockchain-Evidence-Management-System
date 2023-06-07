@@ -40,6 +40,7 @@ export default function UserHome() {
 
   useEffect(() => {
     if (getAllCases) {
+      console.log();
       getCases();
       setGetAllCases(false);
     }
@@ -69,7 +70,7 @@ export default function UserHome() {
               >
                 <CardMedia
                   component="img"
-                  image="https://source.unsplash.com/random"
+                  image="/icons/folder.png"
                   alt="random"
                 />
                 <CardContent sx={{ flexGrow: 1 }}>

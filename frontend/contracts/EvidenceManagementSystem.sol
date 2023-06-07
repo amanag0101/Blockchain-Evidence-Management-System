@@ -7,6 +7,7 @@ contract EvidenceManagementSystem {
         uint256 timestamp;
         string evidenceType;
         string evidenceDescription;
+        string imgHash;
     }
 
     struct Case {
@@ -54,7 +55,8 @@ contract EvidenceManagementSystem {
     function addEvidenceToCase(
         uint256 _caseId,
         string memory _evidenceType,
-        string memory _evidenceDescription
+        string memory _evidenceDescription,
+        string memory _imgHash
     ) public {
         for (uint256 i = 0; i < cases[msg.sender].length; i++) {
             if (cases[msg.sender][i].caseId == _caseId) {
@@ -65,6 +67,7 @@ contract EvidenceManagementSystem {
                 newEvidence.timestamp = block.timestamp;
                 newEvidence.evidenceType = _evidenceType;
                 newEvidence.evidenceDescription = _evidenceDescription;
+                newEvidence.imgHash = _imgHash;
                 break;
             }
         }

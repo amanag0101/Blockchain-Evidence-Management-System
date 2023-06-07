@@ -26,6 +26,7 @@ export default function ViewCase({ caseId }) {
       1: "",
       2: "",
       3: "",
+      4: ""
     },
   ]);
 
@@ -86,7 +87,7 @@ export default function ViewCase({ caseId }) {
               >
                 <CardMedia
                   component="img"
-                  image="https://source.unsplash.com/random"
+                  image={`https://gateway.pinata.cloud/ipfs/${item[4]}`}
                   alt="random"
                 />
                 <CardContent sx={{ flexGrow: 1 }}>
